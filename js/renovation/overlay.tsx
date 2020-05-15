@@ -7,7 +7,7 @@ import { WidgetProps } from './widget';
 import DxOverlay from '../ui/overlay';
 
 export const viewFunction = (viewModel: Overlay) => (
-  <div ref={viewModel.widgetRef as any} id="myId" />
+  <div ref={viewModel.widgetRef as any} />
 );
 @ComponentBindings()
 export class OverlayProps extends WidgetProps {

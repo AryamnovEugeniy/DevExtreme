@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import {
   Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect,
 } from 'devextreme-generator/component_declaration/common';
