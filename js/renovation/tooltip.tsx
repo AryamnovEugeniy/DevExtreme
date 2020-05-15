@@ -1,8 +1,6 @@
 import {
   Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect,
 } from 'devextreme-generator/component_declaration/common';
-// import { animationConfig } from '../animation/fx';
-// import { positionConfig } from '../animation/position';
 import { WidgetProps } from './widget';
 import DxTooltip from '../ui/tooltip';
 
@@ -10,23 +8,13 @@ export const viewFunction = ({ widgetRef }: Tooltip) => <div ref={widgetRef as a
 
 @ComponentBindings()
 export class TooltipProps extends WidgetProps {
-  @OneWay() shading?: boolean;
+  @OneWay() maxHeight?: number | string;
 
-  @OneWay() positionConfig?: any;
-
-  @OneWay() animationConfig?: any;
-
-  @OneWay() width?: number | string;
-
-  @OneWay() height?: number | string;
-
-  @OneWay() dragEnabled?: boolean;
+  @OneWay() rtlEnabled?: boolean;
 
   @OneWay() target?: HTMLDivElement;
 
-  @OneWay() container?: HTMLDivElement;
-
-  @OneWay() closeOnOutsideClick?: boolean;
+  @OneWay() closeOnTargetScroll?: boolean;
 
   @OneWay() onShowing?: () => void;
 
@@ -45,9 +33,17 @@ export default class Tooltip extends JSXComponent<TooltipProps> {
 
   @Effect()
   setupWidget() {
+    const reactContent = React.createElement(this.props.contentTemplate, [], []);
+    const renderTemplate = {
+      render: ({ container }) => ReactDOM.render(
+        reactContent, container,
+      ),
+    };
+
     // eslint-disable-next-line no-new
     new DxTooltip(this.widgetRef, { // eslint-disable-line no-new
       ...this.props as any,
+      contentTemplate: renderTemplate,
     });
   }
 }

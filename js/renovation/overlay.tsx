@@ -1,10 +1,8 @@
 
 import ReactDOM from 'react-dom';
 import {
-  Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect, Template,
+  Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect,
 } from 'devextreme-generator/component_declaration/common';
-// import { animationConfig } from '../animation/fx';
-// import { positionConfig } from '../animation/position';
 import { WidgetProps } from './widget';
 import DxOverlay from '../ui/overlay';
 
@@ -35,7 +33,7 @@ export class OverlayProps extends WidgetProps {
 
   @OneWay() onShown?: () => void;
 
-  @Template() contentTemplate?: any;
+  @OneWay() contentTemplate?: any;
 }
 
 @Component({
@@ -51,29 +49,17 @@ export default class Overlay extends JSXComponent<OverlayProps> {
 
   @Effect()
   setupWidget() {
-    console.log(this.props);
-    // const reactElement = <this.props.contentTemplate />;
-    // ReactDOM.render(
-    //   this.props.contentTemplate, this.widgetRef, (prop) => console.log(prop),
-    // );
-    console.log(document.getElementById('myId'));
-    ReactDOM.render(
-      this.props.contentTemplate, document.getElementById('myId'), () => console.log('hi'),
-    );
-    // const renderTemplate = {
-    //   render: (props) => {
-    //     console.log(props.container);
-    //     return ReactDOM.render(
-    //       <this.props.contentTemplate />, document.getElementById('app'),
-    //     );
-    //   },
-    // };
-    // // eslint-disable-next-line no-new
-    // new DxOverlay(this.widgetRef, { // eslint-disable-line no-new
-    //   ...this.props as any,
-    //   width: 100,
-    //   height: 150,
-    //   contentTemplate: renderTemplate,
-    // });
+    const reactContent = React.createElement(this.props.contentTemplate, [], []);
+    const renderTemplate = {
+      render: ({ container }) => ReactDOM.render(
+        reactContent, container,
+      ),
+    };
+
+    // eslint-disable-next-line no-new
+    new DxOverlay(this.widgetRef, {
+      ...this.props as any,
+      contentTemplate: renderTemplate,
+    });
   }
 }
