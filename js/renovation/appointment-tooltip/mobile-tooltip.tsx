@@ -6,7 +6,7 @@ import {
 import { getWindow } from '../../core/utils/window';
 import { WidgetProps } from '../widget';
 import Overlay from '../overlay';
-import DeleteButton from './delete-button';
+import TooltipItemContent from './tooltip-item-content';
 
 const animationConfigProps: any = {
   show: {
@@ -38,7 +38,7 @@ export const viewFunction = (viewModel: MobileTooltip) => (
     width="100%"
     height={500}
     closeOnOutsideClick={closeOnOutsideClick}
-    contentTemplate={DeleteButton}
+    contentTemplate={TooltipItemContent}
   />
 );
 

@@ -1,11 +1,10 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay,
+  Component, ComponentBindings, JSXComponent,
 } from 'devextreme-generator/component_declaration/common';
-import { WidgetProps } from '../widget';
-import Button from '../button';
-
-const TOOLTIP_APPOINTMENT_ITEM = 'dx-tooltip-appointment-item';
-const TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON = `${TOOLTIP_APPOINTMENT_ITEM}-delete-button`;
+import Button, { ButtonProps } from '../button';
+import {
+  TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON,
+} from './consts';
 
 export const viewFunction = (viewModel: DeleteButton) => (
   // eslint-disable-next-line react/jsx-props-no-spreading
@@ -16,9 +15,7 @@ export const viewFunction = (viewModel: DeleteButton) => (
 );
 
 @ComponentBindings()
-export class DeleteButtonProps extends WidgetProps {
-  @OneWay() currentData?: any;
-}
+export class DeleteButtonProps extends ButtonProps {}
 
 @Component({
   defaultOptionRules: null,
