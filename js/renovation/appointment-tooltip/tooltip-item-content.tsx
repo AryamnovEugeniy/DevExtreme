@@ -1,6 +1,7 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay, Effect,
+  Component, ComponentBindings, JSXComponent, OneWay, Event,
 } from 'devextreme-generator/component_declaration/common';
+import noop from '../utils/noop';
 import { WidgetProps } from '../widget';
 import DeleteButton from './delete-button';
 import {
@@ -11,7 +12,10 @@ import {
 
 
 export const viewFunction = ({
-  restAttributes, currentData,
+  restAttributes,
+  data,
+  currentData,
+  onDeleteButtonClick,
 }: TooltipItemContent) => (
   // Remove divs with dx-scheduler and dx-scheduler-overlay-panel
   <div className="dx-scheduler">
@@ -25,7 +29,7 @@ export const viewFunction = ({
           <div className={TOOLTIP_APPOINTMENT_ITEM_CONTENT_SUBJECT}>{currentData.title}</div>
           <div className={TOOLTIP_APPOINTMENT_ITEM_CONTENT_DATE}>{currentData.date}</div>
         </div>
-        <DeleteButton />
+        <DeleteButton onClick={onDeleteButtonClick} />
       </div>
     </div>
   </div>
@@ -36,6 +40,8 @@ export class TooltipItemContentProps extends WidgetProps {
   @OneWay() item?: any = {};
 
   @OneWay() index?: number = 0;
+
+  @OneWay() onDelete?: (data?: any, currentData?: any) => void = noop;
 }
 
 @Component({
@@ -49,11 +55,22 @@ export default class TooltipItemContent extends JSXComponent<TooltipItemContentP
   }
 
   get data() {
-    console.log(this.props);
     return this.props.item.data;
   }
 
   get color() {
     return this.props.item.color;
+  }
+
+  get onDeleteButtonClick() {
+    const { onDelete } = this.props;
+    return (e: any): void => {
+      console.log('delete click', e);
+      e.event.canceled = true;
+      e.event.stopPropagation();
+      e.event.preventDefault();
+      onDelete(this.data, this.currentData);
+      return e.event;
+    };
   }
 }

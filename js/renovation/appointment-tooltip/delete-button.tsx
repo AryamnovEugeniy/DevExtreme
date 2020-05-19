@@ -6,10 +6,15 @@ import {
   TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON,
 } from './consts';
 
-export const viewFunction = (viewModel: DeleteButton) => (
+export const viewFunction = ({
+  restAttributes,
+  props: {
+    onClick,
+  },
+}: DeleteButton) => (
   // eslint-disable-next-line react/jsx-props-no-spreading
-  <div className={TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON} {...viewModel.restAttributes}>
-    <Button icon="trash" stylingMode="text" />
+  <div className={TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON} {...restAttributes}>
+    <Button icon="trash" stylingMode="text" onClick={onClick} />
   </div>
 
 );

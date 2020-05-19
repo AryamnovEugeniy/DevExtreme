@@ -31,7 +31,9 @@ export default class List extends JSXComponent<ListProps> {
   setupWidget() {
     const { itemTemplate } = this.props;
     const renderTemplate = (item, index, container) => {
-      Preact.render(Preact.h(itemTemplate, { item, index }), container.get(0));
+      setTimeout(() => {
+        Preact.render(Preact.h(itemTemplate, { item, index }), container.get(0));
+      }, 0);
     };
 
     // eslint-disable-next-line no-new

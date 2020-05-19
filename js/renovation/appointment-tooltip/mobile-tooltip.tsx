@@ -1,8 +1,7 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay,
+  Component, ComponentBindings, JSXComponent, OneWay, Event,
 } from 'devextreme-generator/component_declaration/common';
-// import { positionConfig } from '../../animation/position';
-// import { animationConfig } from '../../animation/fx';
+import noop from '../utils/noop';
 import { getWindow } from '../../core/utils/window';
 import { WidgetProps } from '../widget';
 import Overlay from '../overlay';
@@ -31,22 +30,47 @@ const positionConfigProps: any = {
 const closeOnOutsideClick = true;
 const MAX_OVERLAY_HEIGHT = 250;
 
-export const viewFunction = ({ props: { appointmentData } }: MobileTooltip) => (
+export const viewFunction = ({
+  props: {
+    appointmentData,
+    container,
+    target,
+    checkAndDeleteAppointment,
+    showAppointmentPopup,
+  },
+}: MobileTooltip) => (
   <Overlay
-    animationConfig={animationConfigProps}
-    positionConfig={positionConfigProps}
     shading={false}
+    positionConfig={positionConfigProps}
+    animationConfig={animationConfigProps}
+    target={target}
+    container={container}
+    closeOnOutsideClick={closeOnOutsideClick}
     width="100%"
     height="auto"
-    maxHeight={MAX_OVERLAY_HEIGHT}
-    closeOnOutsideClick={closeOnOutsideClick}
-    contentTemplate={() => <AppointmentList appointmentData={appointmentData} />}
+    contentTemplate={() => (
+      <AppointmentList
+        appointmentData={appointmentData}
+        checkAndDeleteAppointment={checkAndDeleteAppointment}
+        showAppointmentPopup={showAppointmentPopup}
+      />
+    )}
   />
 );
 
 @ComponentBindings()
 export class MobileTooltipProps extends WidgetProps {
   @OneWay() appointmentData?: any;
+
+  @OneWay() container?: HTMLDivElement;
+
+  @OneWay() target?: HTMLDivElement;
+
+  @OneWay() checkAndDeleteAppointment?: (data?: any, currentData?: any) => void = noop;
+
+  @OneWay() showAppointmentPopup?: (data: any, visibleButtons: boolean, currentData: any) => void = noop;
+
+  @Event() onHide?: () => void = noop;
 }
 
 @Component({
