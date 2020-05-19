@@ -6,7 +6,7 @@ import {
 import { getWindow } from '../../core/utils/window';
 import { WidgetProps } from '../widget';
 import Overlay from '../overlay';
-import TooltipItemContent from './tooltip-item-content';
+import AppointmentList from './appointment-list';
 
 const animationConfigProps: any = {
   show: {
@@ -29,27 +29,28 @@ const positionConfigProps: any = {
   of: getWindow(),
 };
 const closeOnOutsideClick = true;
+const MAX_OVERLAY_HEIGHT = 250;
 
-export const viewFunction = (viewModel: MobileTooltip) => (
+export const viewFunction = ({ props: { appointmentData } }: MobileTooltip) => (
   <Overlay
     animationConfig={animationConfigProps}
     positionConfig={positionConfigProps}
     shading={false}
     width="100%"
-    height={500}
+    height="auto"
+    maxHeight={MAX_OVERLAY_HEIGHT}
     closeOnOutsideClick={closeOnOutsideClick}
-    contentTemplate={TooltipItemContent}
+    contentTemplate={() => <AppointmentList appointmentData={appointmentData} />}
   />
 );
 
 @ComponentBindings()
 export class MobileTooltipProps extends WidgetProps {
-  @OneWay() currentData?: any;
+  @OneWay() appointmentData?: any;
 }
 
 @Component({
   defaultOptionRules: null,
   view: viewFunction,
 })
-export default class MobileTooltip extends JSXComponent<MobileTooltipProps> {
-}
+export default class MobileTooltip extends JSXComponent<MobileTooltipProps> {}

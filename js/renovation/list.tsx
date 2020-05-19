@@ -1,5 +1,4 @@
-
-import ReactDOM from 'react-dom';
+import * as Preact from 'preact';
 import {
   Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect, Event,
 } from 'devextreme-generator/component_declaration/common';
@@ -21,22 +20,18 @@ export class ListProps extends WidgetProps {
 
 @Component({
   defaultOptionRules: null,
+  jQuery: { register: true },
   view: viewFunction,
 })
 export default class List extends JSXComponent<ListProps> {
   @Ref()
   widgetRef!: HTMLDivElement;
 
-  @Ref()
-  contentRef!: HTMLDivElement;
-
   @Effect()
   setupWidget() {
-    const reactContent = React.createElement(this.props.itemTemplate, [], []);
-    const renderTemplate = {
-      render: ({ container }) => ReactDOM.render(
-        reactContent, container,
-      ),
+    const { itemTemplate } = this.props;
+    const renderTemplate = (item, index, container) => {
+      Preact.render(Preact.h(itemTemplate, { item, index }), container.get(0));
     };
 
     // eslint-disable-next-line no-new

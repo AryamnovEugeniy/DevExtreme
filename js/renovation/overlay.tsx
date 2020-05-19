@@ -1,5 +1,4 @@
-
-import ReactDOM from 'react-dom';
+import * as Preact from 'preact';
 import {
   Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect,
 } from 'devextreme-generator/component_declaration/common';
@@ -21,6 +20,8 @@ export class OverlayProps extends WidgetProps {
 
   @OneWay() height?: number | string;
 
+  @OneWay() maxHeight?: number | string | (() => number | string);
+
   @OneWay() dragEnabled?: boolean;
 
   @OneWay() target?: HTMLDivElement;
@@ -38,6 +39,7 @@ export class OverlayProps extends WidgetProps {
 
 @Component({
   defaultOptionRules: null,
+  jQuery: { register: true },
   view: viewFunction,
 })
 export default class Overlay extends JSXComponent<OverlayProps> {
@@ -49,11 +51,11 @@ export default class Overlay extends JSXComponent<OverlayProps> {
 
   @Effect()
   setupWidget() {
-    const reactContent = React.createElement(this.props.contentTemplate, [], []);
-    const renderTemplate = {
-      render: ({ container }) => ReactDOM.render(
-        reactContent, container,
-      ),
+    const { contentTemplate } = this.props;
+    const renderTemplate = (container) => {
+      setTimeout(() => {
+        Preact.render(Preact.h(contentTemplate, {}), container.get(0));
+      }, 0);
     };
 
     // eslint-disable-next-line no-new
