@@ -1,5 +1,5 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay, Event,
+  Component, ComponentBindings, JSXComponent, OneWay, Event, Ref,
 } from 'devextreme-generator/component_declaration/common';
 import noop from '../utils/noop';
 import { getWindow } from '../../core/utils/window';
@@ -31,12 +31,14 @@ const closeOnOutsideClick = true;
 const MAX_OVERLAY_HEIGHT = 250;
 
 export const viewFunction = ({
+  onShown,
   props: {
     appointmentData,
     container,
     target,
     checkAndDeleteAppointment,
     showAppointmentPopup,
+    onHide,
   },
 }: MobileTooltip) => (
   <Overlay
@@ -48,11 +50,13 @@ export const viewFunction = ({
     closeOnOutsideClick={closeOnOutsideClick}
     width="100%"
     height="auto"
+    onShowing={onShown}
     contentTemplate={() => (
       <AppointmentList
         appointmentData={appointmentData}
         checkAndDeleteAppointment={checkAndDeleteAppointment}
         showAppointmentPopup={showAppointmentPopup}
+        onHide={onHide}
       />
     )}
   />
@@ -77,4 +81,8 @@ export class MobileTooltipProps extends WidgetProps {
   defaultOptionRules: null,
   view: viewFunction,
 })
-export default class MobileTooltip extends JSXComponent<MobileTooltipProps> {}
+export default class MobileTooltip extends JSXComponent<MobileTooltipProps> {
+  get onShown() {
+    return (...props) => console.log(this.listRef);
+  }
+}

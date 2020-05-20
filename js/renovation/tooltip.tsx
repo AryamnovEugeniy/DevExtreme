@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom';
+import * as Preact from 'preact';
 import {
   Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect,
 } from 'devextreme-generator/component_declaration/common';
@@ -26,6 +26,7 @@ export class TooltipProps extends WidgetProps {
 
 @Component({
   defaultOptionRules: null,
+  jQuery: { register: true },
   view: viewFunction,
 })
 export default class Tooltip extends JSXComponent<TooltipProps> {
@@ -34,15 +35,15 @@ export default class Tooltip extends JSXComponent<TooltipProps> {
 
   @Effect()
   setupWidget() {
-    const reactContent = React.createElement(this.props.contentTemplate, [], []);
-    const renderTemplate = {
-      render: ({ container }) => ReactDOM.render(
-        reactContent, container,
-      ),
+    const { contentTemplate } = this.props;
+    const renderTemplate = (container) => {
+      setTimeout(() => {
+        Preact.render(Preact.h(contentTemplate, {}), container.get(0));
+      }, 0);
     };
 
     // eslint-disable-next-line no-new
-    new DxTooltip(this.widgetRef, { // eslint-disable-line no-new
+    new DxTooltip(this.widgetRef, {
       ...this.props as any,
       contentTemplate: renderTemplate,
     });

@@ -1,5 +1,5 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay,
+  Component, ComponentBindings, JSXComponent, OneWay, Ref, Effect,
 } from 'devextreme-generator/component_declaration/common';
 import noop from '../utils/noop';
 import { WidgetProps } from '../widget';
@@ -22,6 +22,8 @@ export const viewFunction = ({
   props: {
     appointmentData,
     checkAndDeleteAppointment,
+    listRef,
+    onHide,
   },
 }: AppointmentList) => (
   <List
@@ -30,11 +32,13 @@ export const viewFunction = ({
         item={item}
         index={index}
         onDelete={checkAndDeleteAppointment}
+        onHide={onHide}
       />
     )}
     dataSource={appointmentData}
     focusStateEnabled={trueValue}
     onItemClick={onItemClick}
+    listRef={listRef as any}
     // eslint-disable-next-line react/jsx-props-no-spreading
     {...restAttributes}
   />
@@ -44,9 +48,13 @@ export const viewFunction = ({
 export class AppointmentListProps extends WidgetProps {
   @OneWay() appointmentData?: any;
 
+  @OneWay() listRef?: any;
+
   @OneWay() checkAndDeleteAppointment?: (data?: any, currentData?: any) => void = noop;
 
   @OneWay() showAppointmentPopup?: (data: any, visibleButtons: boolean, currentData: any) => void = noop;
+
+  @OneWay() onHide?: () => void = noop;
 }
 
 @Component({
@@ -55,6 +63,8 @@ export class AppointmentListProps extends WidgetProps {
   view: viewFunction,
 })
 export default class AppointmentList extends JSXComponent<AppointmentListProps> {
+  height: string | number = 'auto';
+
   get onItemClick() {
     return (e) => {
       const { data, currentData } = e.itemData;

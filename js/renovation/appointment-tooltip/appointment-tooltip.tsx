@@ -1,9 +1,10 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay, TwoWay, Method,
+  Component, ComponentBindings, JSXComponent, OneWay, TwoWay, Method, Template,
 } from 'devextreme-generator/component_declaration/common';
 import noop from '../utils/noop';
 import { WidgetProps } from '../widget';
 import MobileTooltip from './mobile-tooltip';
+import DesktopTooltip from './desktop-tooltip';
 
 const SLIDE_PANEL_CLASS_NAME = 'dx-scheduler-overlay-panel';
 const APPOINTMENT_TOOLTIP_WRAPPER_CLASS = 'dx-scheduler-appointment-tooltip-wrapper';
@@ -11,7 +12,7 @@ const APPOINTMENT_TOOLTIP_WRAPPER_CLASS = 'dx-scheduler-appointment-tooltip-wrap
 export const viewFunction = ({
   className,
   restAttributes,
-  hide,
+  onHide,
   props: {
     adaptivityEnabled,
     appointmentData,
@@ -22,13 +23,13 @@ export const viewFunction = ({
     checkAndDeleteAppointment,
   },
 }: AppointmentTooltip) => {
-  const Tooltip = adaptivityEnabled ? MobileTooltip : MobileTooltip;
+  const Tooltip = adaptivityEnabled ? MobileTooltip : DesktopTooltip;
   return visible ? (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <div className={className} {...restAttributes}>
       <Tooltip
         appointmentData={appointmentData}
-        onHide={hide}
+        onHide={onHide}
         target={target}
         container={container}
         checkAndDeleteAppointment={checkAndDeleteAppointment}
@@ -52,7 +53,9 @@ export class AppointmentTooltipProps extends WidgetProps {
 
   @OneWay() showAppointmentPopup?: (data: any, visibleButtons: boolean, currentData: any) => void = noop;
 
-  @TwoWay() visible?: boolean = false;
+  @TwoWay() visible?: boolean = true;
+
+  @Template() appointmentTooltipTemplate?: any;
 }
 
 @Component({
@@ -74,5 +77,10 @@ export default class AppointmentTooltip extends JSXComponent<AppointmentTooltipP
   @Method()
   show() {
     this.props.visible = true;
+  }
+
+  onHide() {
+    console.log('hide');
+    return () => this.hide();
   }
 }

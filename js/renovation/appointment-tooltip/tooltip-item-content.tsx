@@ -42,6 +42,8 @@ export class TooltipItemContentProps extends WidgetProps {
   @OneWay() index?: number = 0;
 
   @OneWay() onDelete?: (data?: any, currentData?: any) => void = noop;
+
+  @OneWay() onHide?: () => void = noop;
 }
 
 @Component({
@@ -63,14 +65,11 @@ export default class TooltipItemContent extends JSXComponent<TooltipItemContentP
   }
 
   get onDeleteButtonClick() {
-    const { onDelete } = this.props;
+    const { onDelete, onHide } = this.props;
     return (e: any): void => {
-      console.log('delete click', e);
-      e.event.canceled = true;
+      onHide!();
       e.event.stopPropagation();
-      e.event.preventDefault();
-      onDelete(this.data, this.currentData);
-      return e.event;
+      onDelete!(this.data, this.currentData);
     };
   }
 }
