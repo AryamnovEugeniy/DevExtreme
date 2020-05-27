@@ -60,7 +60,7 @@
         "no-whitespace-before-property": "error",
         "object-curly-spacing": [ "error", "always" ],
         "one-var": ["error", "never"],
-        "prefer-const": "warn",
+        "prefer-const": "error",
         "semi-spacing": "error",
         "semi": "error",
         "space-before-blocks": "error",
@@ -90,5 +90,9 @@
             }
         ],
         "quotes": ["error", "single"]
-    }
+    },
+    "overrides": [{
+        "files": ["*.js"],
+        "parser": "babel-eslint"
+    }]
 }
