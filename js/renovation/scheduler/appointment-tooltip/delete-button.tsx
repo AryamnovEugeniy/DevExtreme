@@ -1,7 +1,8 @@
 import {
   Component, ComponentBindings, JSXComponent,
 } from 'devextreme-generator/component_declaration/common';
-import Button, { ButtonProps } from '../button';
+import { ButtonProps } from '../../button';
+import Button from '../../wrapped-button';
 import {
   TOOLTIP_APPOINTMENT_ITEM_DELETE_BUTTON,
 } from './consts';
@@ -25,5 +26,8 @@ export class DeleteButtonProps extends ButtonProps {}
 @Component({
   defaultOptionRules: null,
   view: viewFunction,
+  jQuery: {
+    register: true,
+  },
 })
 export default class DeleteButton extends JSXComponent<DeleteButtonProps> {}

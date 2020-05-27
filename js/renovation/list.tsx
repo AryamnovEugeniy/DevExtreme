@@ -15,6 +15,8 @@ export class ListProps extends WidgetProps {
 
   @OneWay() itemTemplate?: any;
 
+  @OneWay() listRef?: any;
+
   @Event() onItemClick?: (e: any) => any = (() => {});
 }
 
@@ -32,7 +34,7 @@ export default class List extends JSXComponent<ListProps> {
     const { itemTemplate } = this.props;
     const renderTemplate = (item, index, container) => {
       setTimeout(() => {
-        Preact.render(Preact.h(itemTemplate, { item, index }), container.get(0));
+        Preact.render(Preact.h(itemTemplate, { item, index, container }), container.get(0));
       }, 0);
     };
 

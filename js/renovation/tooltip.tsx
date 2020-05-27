@@ -15,7 +15,7 @@ export class TooltipProps extends WidgetProps {
 
   @OneWay() target?: HTMLDivElement;
 
-  @OneWay() closeOnTargetScroll?: boolean;
+  @OneWay() closeOnTargetScroll?: () => boolean;
 
   @OneWay() onShowing?: () => void;
 
