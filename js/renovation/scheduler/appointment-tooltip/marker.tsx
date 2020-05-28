@@ -26,16 +26,12 @@ type Color = string;
 @Component({
   defaultOptionRules: null,
   view: viewFunction,
-  jQuery: {
-    register: true,
-  },
 })
 export default class Marker extends JSXComponent<MarkerProps> {
   appointmentColor!: Color;
 
   @Effect()
   colorEffect() {
-    console.log('color effect!');
     const { color } = this.props;
     color?.done((value) => {
       this.appointmentColor = value;
