@@ -1,8 +1,7 @@
 import {
-  Component, ComponentBindings, JSXComponent, OneWay, Template, Ref, Fragment, Effect,
+  Component, ComponentBindings, JSXComponent, OneWay, Template, Ref, Fragment,
 } from 'devextreme-generator/component_declaration/common';
 import noop from '../../utils/noop';
-import { WidgetProps } from '../../widget';
 import DeleteButton from './delete-button';
 import {
   TOOLTIP_APPOINTMENT_ITEM, TOOLTIP_APPOINTMENT_ITEM_CONTENT,
@@ -10,6 +9,24 @@ import {
 } from './consts';
 import Marker from './marker';
 
+type GetCurrentDataFn = (appointmentItem: any) => any;
+type GetOnDeleteButtonClick = (
+  props: TooltipItemContentProps, data: any, currentData: any,
+) => (e: any) => void;
+
+export const getCurrentData: GetCurrentDataFn = (appointmentItem) => {
+  const { settings, data, currentData } = appointmentItem;
+
+  return settings?.targetedAppointmentData || currentData || data;
+};
+
+export const getOnDeleteButtonClick: GetOnDeleteButtonClick = (
+  { onDelete, onHide }, data, currentData,
+) => (e: any): void => {
+    onHide?.();
+    e.event.stopPropagation();
+    onDelete?.(data, currentData);
+};
 
 export const viewFunction = (viewModel: TooltipItemContent) => {
   const useTemplate = !!viewModel.props.itemContent;
@@ -46,10 +63,10 @@ export const viewFunction = (viewModel: TooltipItemContent) => {
 };
 
 @ComponentBindings()
-export class TooltipItemContentProps extends WidgetProps {
+export class TooltipItemContentProps {
   @OneWay() item?: any = {};
 
-  @OneWay() index?: number = 0;
+  @OneWay() index?: number;
 
   @OneWay() container?: HTMLDivElement;
 
@@ -77,7 +94,7 @@ export default class TooltipItemContent extends JSXComponent<TooltipItemContentP
 
   get currentData() {
     const { item } = this.props;
-    return item.settings?.targetedAppointmentData || item.currentData || item.data;
+    return getCurrentData(item);
   }
 
   get data() {
@@ -89,21 +106,11 @@ export default class TooltipItemContent extends JSXComponent<TooltipItemContentP
   }
 
   get onDeleteButtonClick() {
-    const { onDelete, onHide } = this.props;
-    return (e: any): void => {
-      onHide!();
-      e.event.stopPropagation();
-      onDelete!(this.data, this.currentData);
-    };
+    return getOnDeleteButtonClick(this.props, this.data, this.currentData);
   }
 
   get formattedData() {
     const { getTextAndFormatDate } = this.props;
-    return getTextAndFormatDate!(this.data, this.currentData);
-  }
-
-  @Effect()
-  someEffect() {
-    console.log('Some effect');
+    return getTextAndFormatDate?.(this.data, this.currentData);
   }
 }
