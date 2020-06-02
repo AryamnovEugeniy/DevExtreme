@@ -37,7 +37,7 @@ export const viewFunction = (viewModel: TooltipItemContent) => {
       <viewModel.props.itemContent
         model={{
           appointmentData: viewModel.data,
-          appointmentTargetedData: viewModel.currentData,
+          targetedAppointmentData: viewModel.currentData,
         }}
         index={viewModel.props.index}
         parentRef={{
