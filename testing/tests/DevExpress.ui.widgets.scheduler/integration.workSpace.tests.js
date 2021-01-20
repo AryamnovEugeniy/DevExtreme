@@ -1845,13 +1845,17 @@ QUnit.test('Vertical scrollable should work after switching currentDate if allDa
 });
 
 QUnit.test('Current time indicator calculates position correctly with workWeek view (T750252)', function(assert) {
+    const now = new Date(2021, 0, 20, 15);
     this.createInstance({
         dataSource: [],
-        views: [
-            { name: '2 Work Weeks', type: 'workWeek', intervalCount: 2, startDate: new Date(Date.now() - 5 * toMs('day')) },
-        ],
+        views: [{
+            name: '2 Work Weeks',
+            type: 'workWeek',
+            intervalCount: 2,
+            startDate: new Date(now.getTime() - 5 * toMs('day')),
+        }],
         currentView: 'workWeek',
-        currentDate: new Date(),
+        currentDate: now,
         height: 580
     });
 
@@ -1859,7 +1863,7 @@ QUnit.test('Current time indicator calculates position correctly with workWeek v
     const $dateTimeIndicator = this.scheduler.workSpace.getCurrentTimeIndicator()[0];
     const position = { top: $dateTimeIndicator.style.top, left: $dateTimeIndicator.style.left };
 
-    assert.notEqual(position, { left: 0, top: 0 }, 'Current time indicator positioned correctly');
+    assert.notDeepEqual(position, { left: 0, top: 0 }, 'Current time indicator positioned correctly');
 });
 
 QUnit.test('Month view; dates are rendered correctly with grouping by date & empty resources in groups (T759160)', function(assert) {
